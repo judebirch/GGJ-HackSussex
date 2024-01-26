@@ -14,6 +14,7 @@ namespace Example.UI
         [SerializeField] CalibrationBlock m_CalibrationBlock;
         [SerializeField] RotoVrBlock m_RotoVrBlock;
 
+        public Transform CameraTransform;
 
         void Awake()
         {
@@ -49,12 +50,16 @@ namespace Example.UI
 
             m_RotoVrBlock.TurnLeft.onClick.AddListener(() =>
             {
+                CameraTransform.Rotate(new Vector3(0, -20, 0));
+
                 m_RotoBerhaviour.RotateOnAngle(Direction.Left, 20,
                     (int)(m_RotoVrBlock.RotationPower.value * 100));
             });
 
             m_RotoVrBlock.TurnRight.onClick.AddListener(() =>
             {
+                CameraTransform.Rotate(new Vector3(0, 20, 0));
+
                 m_RotoBerhaviour.RotateOnAngle(Direction.Right, 20,
                     (int)(m_RotoVrBlock.RotationPower.value * 100));
             });
