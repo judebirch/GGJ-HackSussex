@@ -11,10 +11,9 @@ public class ChairController : MonoBehaviour
 
     public float Direction;
 
-    public void OnTurn(InputAction.CallbackContext callbackContext)
+    private void Update()
     {
-        Debug.Log(callbackContext.ReadValue<Vector2>());
-        Direction += callbackContext.ReadValue<Vector2>().x * Time.deltaTime * 90;
+        Direction += Input.GetAxis("Horizontal") * Time.deltaTime * 90;
 
         ChairTransform.rotation = Quaternion.Euler(new Vector3(0, Direction, 0));
 
