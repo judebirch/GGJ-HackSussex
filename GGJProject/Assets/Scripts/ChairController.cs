@@ -13,10 +13,19 @@ public class ChairController : MonoBehaviour
 
     private void Update()
     {
-        Direction += Input.GetAxis("Horizontal") * Time.deltaTime * 90;
+        int change = Mathf.RoundToInt( Input.GetAxis("Horizontal") * Time.deltaTime * 90);
+
+        Direction += change;
 
         ChairTransform.rotation = Quaternion.Euler(new Vector3(0, Direction, 0));
 
-        m_RotoBerhaviour.RotateToAngleByCloserDirection((int)Direction, 100);
+        if(change > 0)
+        {
+            m_RotoBerhaviour.RotateOnAngle(RotoVR.SDK.Enum.Direction.Left, change, 100);
+        }
+        else
+        {
+            m_RotoBerhaviour.RotateOnAngle(RotoVR.SDK.Enum.Direction.Right, change, 100);
+        }
     }
 }
