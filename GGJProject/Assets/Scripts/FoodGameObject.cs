@@ -38,24 +38,38 @@ public class FoodGameObject : MonoBehaviour
 
     public Rigidbody rigidbody;
 
+    public UnityEngine.UI.Image ProgressImage;
+
     private void Update()
     {
         if(IsFire)
         {
             CookTime += Time.deltaTime;
-            if(CookTime >= Item.CookTime)
+
+            ProgressImage.fillAmount = CookTime / Item.CookTime;
+
+            if (CookTime >= Item.CookTime)
             {
                 rigidbody.AddForce(Vector3.up*100f, ForceMode.Acceleration);
                 Setup(Item.Cooked);
-                
             }
         }
+    }
+
+    private void LateUpdate()
+    {
+        // Position progress
+        Camera camera = Camera.main;
+        ProgressImage.transform.position = transform.position + Vector3.up * 1;
+        ProgressImage.transform.LookAt(ProgressImage.transform.position + camera.transform.rotation * Vector3.back, camera.transform.rotation * Vector3.up);
     }
 
     private void OnTriggerEnter(Collider other)
     {
         if(other.CompareTag("Heat"))
         {
+            ProgressImage.gameObject.SetActive(true);
+
             IsFire = true;
         }
     }
@@ -64,6 +78,8 @@ public class FoodGameObject : MonoBehaviour
     {
         if(other.CompareTag("Heat"))
         {
+            ProgressImage.gameObject.SetActive(false);
+
             IsFire = false;
         }
     }
