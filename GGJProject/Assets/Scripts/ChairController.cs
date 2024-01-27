@@ -27,6 +27,11 @@ public class ChairController : MonoBehaviour
 
     float timer = 0f;
 
+    private void Start()
+    {
+        m_RotoBerhaviour.Connect();
+    }
+
     private void Update()
     {
         if (Controller)
@@ -38,14 +43,19 @@ public class ChairController : MonoBehaviour
 
             ChairTransform.rotation = Quaternion.Euler(new Vector3(0, Angle, 0));
 
-            if (change > 0)
+            /*if (change > 0)
             {
                 m_RotoBerhaviour.RotateOnAngle(RotoVR.SDK.Enum.Direction.Left, change, 100);
             }
             else
             {
                 m_RotoBerhaviour.RotateOnAngle(RotoVR.SDK.Enum.Direction.Right, change, 100);
-            }
+            }*/
+
+            m_RotoBerhaviour.RotateToAngleByCloserDirection(Mathf.RoundToInt(ChairTransform.rotation.eulerAngles.y), 100);
+
+            debugText.text = "direction: " + ChairTransform.rotation.eulerAngles.y;
+            debugText.text += "\nsdk: " + m_RotoBerhaviour.readAngle;
 
 
         }
@@ -57,7 +67,7 @@ public class ChairController : MonoBehaviour
 
             timer += Time.deltaTime;
 
-            if (timer > .1f)
+            if (timer > .025f)
             {
                 timer = 0f;
 
@@ -89,6 +99,7 @@ public class ChairController : MonoBehaviour
                 //   m_RotoBerhaviour.RotateToAngle(RotoVR.SDK.Enum.Direction.Right, Mathf.RoundToInt(Direction), 100);
 
                 m_RotoBerhaviour.RotateToAngleByCloserDirection(Mathf.RoundToInt(Angle), 100);
+                ChairTransform.rotation = Quaternion.Euler(new Vector3(0, Angle, 0));
                 debugText.text += "\nsdk: " + m_RotoBerhaviour.readAngle;
             }
 
@@ -98,13 +109,13 @@ public class ChairController : MonoBehaviour
 
     }
 
-    public void ToggleDebug()
+    public void ToggleDebug() //debug mode
     {
         debug = !debug;
         Controller = !Controller;
     }
 
-    public void ToggleDirection()
+    public void ToggleDirection() //debug mode
     {
         if (Direction == Direction.Right)
         {
