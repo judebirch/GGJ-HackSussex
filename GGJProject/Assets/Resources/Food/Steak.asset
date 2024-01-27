@@ -12,7 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e7a92d9c5c53c0f429a707d877a0289d, type: 3}
   m_Name: Steak
   m_EditorClassIdentifier: 
-  Model: {fileID: 0}
-  isCookFood: 1
-  CookTime: 5
+  Model: {fileID: 5179032172124296347, guid: bb24102c85ed9bb4faa4a61537af9a43, type: 3}
   Cooked: {fileID: 11400000}
+  CookTime: 5
+  isCookFood: 1
