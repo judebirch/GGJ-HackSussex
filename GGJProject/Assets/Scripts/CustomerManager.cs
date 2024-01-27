@@ -31,11 +31,12 @@ public class CustomerManager : MonoBehaviour
         cookedFoodList = cooked.ToArray();
     }
 
-    public void SpawnCustomer(Vector3 position)
+    public CustomerController SpawnCustomer(Vector3 position)
     {
         CustomerController newCustomer = Instantiate(customerBase, position, Quaternion.identity, transform).GetComponent<CustomerController>();
         newCustomer.SetFood(cookedFoodList[Random.Range(0,cookedFoodList.Length)]);
         generatedCustomers.Add(newCustomer);
+        return newCustomer;
     }
 
     [ContextMenu("Test_Spawn")]
