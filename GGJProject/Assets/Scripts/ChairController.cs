@@ -41,7 +41,7 @@ public class ChairController : MonoBehaviour
 
             Angle += change;
 
-            ChairTransform.rotation = Quaternion.Euler(new Vector3(0, Angle, 0));
+            //ChairTransform.rotation = Quaternion.Euler(new Vector3(0, Angle, 0));
 
             /*if (change > 0)
             {
@@ -52,7 +52,7 @@ public class ChairController : MonoBehaviour
                 m_RotoBerhaviour.RotateOnAngle(RotoVR.SDK.Enum.Direction.Right, change, 100);
             }*/
 
-            m_RotoBerhaviour.RotateToAngleByCloserDirection(Mathf.RoundToInt(ChairTransform.rotation.eulerAngles.y), 100);
+            m_RotoBerhaviour.RotateToAngleByCloserDirection(Mathf.RoundToInt(Angle), 100);
 
             debugText.text = "direction: " + ChairTransform.rotation.eulerAngles.y;
             debugText.text += "\nsdk: " + m_RotoBerhaviour.readAngle;

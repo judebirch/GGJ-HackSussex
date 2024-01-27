@@ -12,4 +12,7 @@ EditorBuildSettings:
     path: Assets/Scenes/TableGameScene.unity
     guid: 9f48901b6fdd1974ba0738cc8201e761
   m_configObjects:
+    Unity.XR.Oculus.Settings: {fileID: 11400000, guid: a401c64c3bdd86d4fa30cd4fe1c91898, type: 2}
     com.unity.input.settings: {fileID: 11400000, guid: 74efb205e79737c4cb587451015ad17d, type: 2}
+    com.unity.xr.management.loader_settings: {fileID: 11400000, guid: dbb0b853f317cdb4dbf023d220da6305, type: 2}
+    com.unity.xr.openxr.settings4: {fileID: 11400000, guid: 18832c37cd34c354eac9e2f0bd633e1f, type: 2}
