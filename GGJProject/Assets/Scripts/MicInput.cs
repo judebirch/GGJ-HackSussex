@@ -1,98 +1,61 @@
+using System;
 using UnityEngine;
 
 public class MicInput : MonoBehaviour
 {
+    public event Action<float> BelowLowThreshold;
+    public event Action<float> AboveHighThreshold;
 
-    public static float MicLoudness;
+    [SerializeField] private int _sampleWindow = 64;
+    [SerializeField] private float _lowThreshold;
+    [SerializeField] private float _highThreshold;
 
-    private string _device;
+    private AudioClip _microphoneClip;
+    private string _microphoneName;
+    private bool _listening;
+    private float _currentLoudness;
 
-    //mic initialization
-    void InitMic()
+    public float lowThreshold => _lowThreshold;
+    public float highThreshold => _highThreshold;
+    public bool isListening => _listening;
+    public float currentLoudness => _currentLoudness;
+
+    void Awake()
     {
-        if (_device == null) _device = Microphone.devices[0];
-        _clipRecord = Microphone.Start(_device, true, 999, 44100);
+        _microphoneName = Microphone.devices[0];
+        _microphoneClip = Microphone.Start(_microphoneName, true, 20, AudioSettings.outputSampleRate);
+        if (_microphoneClip != null)
+            _listening = true;
+        else
+            this.enabled = false;
+
+        AboveHighThreshold += (v) => Debug.Log("High volume!");
+
     }
-
-    void StopMicrophone()
-    {
-        Microphone.End(_device);
-    }
-
-
-    AudioClip _clipRecord = AudioClip.Create("Test", 128, 1, 44100,true);
-    int _sampleWindow = 128;
-
-    //get data from microphone into audioclip
-    float LevelMax()
-    {
-        float levelMax = 0;
-        float[] waveData = new float[_sampleWindow];
-        int micPosition = Microphone.GetPosition(null) - (_sampleWindow + 1); // null means the first microphone
-        if (micPosition < 0) return 0;
-        _clipRecord.GetData(waveData, micPosition);
-        // Getting a peak on the last 128 samples
-        for (int i = 0; i < _sampleWindow; i++)
-        {
-            float wavePeak = waveData[i] * waveData[i];
-            if (levelMax < wavePeak)
-            {
-                levelMax = wavePeak;
-            }
-        }
-        return levelMax;
-    }
-
-
 
     void Update()
     {
-        // levelMax equals to the highest normalized value power 2, a small number because < 1
-        // pass the value to a static var so we can access it from anywhere
-        MicLoudness = LevelMax();
+        _currentLoudness = GetLoudnessFromAudioClip(Microphone.GetPosition(_microphoneName), _microphoneClip, _sampleWindow);
+        if (_currentLoudness < _lowThreshold)
+            BelowLowThreshold?.Invoke(_currentLoudness);
+        else if (_currentLoudness > _highThreshold)
+            AboveHighThreshold?.Invoke(_currentLoudness);
     }
 
-    bool _isInitialized;
-    // start mic when scene starts
-    void OnEnable()
+    public static float GetLoudnessFromAudioClip(int clipPosition, AudioClip clip, int sampleWindow)
     {
-        InitMic();
-        _isInitialized = true;
-    }
+        var startPosition = clipPosition - sampleWindow;
+        if (startPosition < 0) return 0;
 
-    //stop mic when loading a new level or quit application
-    void OnDisable()
-    {
-        StopMicrophone();
-    }
+        var waveData = new float[sampleWindow];
+        clip.GetData(waveData, startPosition);
 
-    void OnDestroy()
-    {
-        StopMicrophone();
-    }
+        //compute loudness
+        var totalLoudness = 0f;
 
+        for (var i = 0; i < sampleWindow; ++i)
+            totalLoudness += Mathf.Abs(waveData[i]);
 
-    // make sure the mic gets started & stopped when application gets focused
-    void OnApplicationFocus(bool focus)
-    {
-        if (focus)
-        {
-            //Debug.Log("Focus");
-
-            if (!_isInitialized)
-            {
-                //Debug.Log("Init Mic");
-                InitMic();
-                _isInitialized = true;
-            }
-        }
-        if (!focus)
-        {
-            //Debug.Log("Pause");
-            StopMicrophone();
-            //Debug.Log("Stop Mic");
-            _isInitialized = false;
-
-        }
+        return totalLoudness / sampleWindow;
     }
 }
