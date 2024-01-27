@@ -13,5 +13,5 @@ MonoBehaviour:
   m_Name: Steak
   m_EditorClassIdentifier: 
   Model: {fileID: 0}
-  Cooked: {fileID: 0}
-  CookTime: 0
+  Cooked: {fileID: 11400000}
+  CookTime: 5

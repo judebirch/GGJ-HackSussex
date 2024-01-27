@@ -10,19 +10,31 @@ public abstract class Station : MonoBehaviour, IFoodContainer
     {
         if(CurrentFood == null)
         {
-            food = CurrentFood;
-            OnFoodAdded(food);
+            CurrentFood = food;
+            OnFoodAdded(CurrentFood);
         }
     }
 
     public FoodItem RemoveFood()
     {
+        OnFoodRemoved();
+
         var temp = CurrentFood;
         CurrentFood = null;
         return temp;
     }
 
     public virtual void OnFoodAdded(FoodItem food)
+    {
+
+    }
+
+    public virtual void OnFoodRemoved()
+    {
+
+    }
+
+    public virtual void OnInteract()
     {
 
     }
