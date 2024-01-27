@@ -14,6 +14,8 @@ namespace RotoVR.SDK.Components
         /// </summary>
         [SerializeField] string m_DeviceName = "rotoVR Base Station";
 
+        [SerializeField] public float readAngle = 0.0f;
+
         /// <summary>
         /// Setup on the component in a scene working mode
         /// </summary>
@@ -109,16 +111,16 @@ namespace RotoVR.SDK.Components
                     switch (m_ModeType)
                     {
                         case ModeType.FreeMode:
-                            m_Roto.SetMode(m_ModeType, new ModeParametersModel(0, 30));
+                            m_Roto.SetMode(m_ModeType, new ModeParametersModel(0, 100));
                             break;
                         case ModeType.HeadTrack:
-                            m_Roto.SetMode(m_ModeType, new ModeParametersModel(0, 30));
+                            m_Roto.SetMode(m_ModeType, new ModeParametersModel(0, 100));
                             var headCamera = Camera.main;
                             if (headCamera != null)
                                 m_Roto.StartHeadTracking(this, headCamera.gameObject.transform);
                             break;
                         case ModeType.CockpitMode:
-                            m_Roto.SetMode(m_ModeType, new ModeParametersModel(140, 30));
+                            m_Roto.SetMode(m_ModeType, new ModeParametersModel(140, 100));
                             break;
                         case ModeType.SimulationMode:
                             m_Roto.SetMode(ModeType.FreeMode, new ModeParametersModel(0, 100));
@@ -160,27 +162,36 @@ namespace RotoVR.SDK.Components
         /// <param name="direction">Direction of rotation</param>
         /// <param name="angle">Angle which we need rotate the chair on</param>
         /// <param name="power">Rotational power. In range 0-100</param>
-        public void RotateOnAngle(Direction direction, int angle, int power) =>
+        public void RotateOnAngle(Direction direction, int angle, int power)
+        {
             m_Roto.RotateOnAngle(direction, angle, power);
-
+            readAngle = (float)angle;
+        }
         /// <summary>
         /// Rotate to angle
         /// </summary>
         /// <param name="direction">Direction of rotation</param>
         /// <param name="angle">Angle which we need rotate the chair to</param>
         /// <param name="power">Rotational power. In range 0-100</param>
-        public void RotateToAngle(Direction direction, int angle, int power) =>
-            m_Roto.RotateToAngle(direction, angle, power);
+        public void RotateToAngle(Direction direction, int angle, int power) { 
+        m_Roto.RotateToAngle(direction, angle, power);
+            readAngle = (float)angle;
+            }
 
-        public void RotateToAngleByCloserDirection(int angle, int power) =>
+
+
+        public void RotateToAngleByCloserDirection(int angle, int power)
+        {
             m_Roto.RotateToAngleCloserDirection(angle, power);
+            readAngle = (float)angle;
+        }
 
-        /// <summary>
-        /// Play rumble
-        /// </summary>
-        /// <param name="time">Duration</param>
-        /// <param name="power">Power</param>
-        public void Rumble(float time, int power) => m_Roto.Rumble(time, power);
+            /// <summary>
+            /// Play rumble
+            /// </summary>
+            /// <param name="time">Duration</param>
+            /// <param name="power">Power</param>
+            public void Rumble(float time, int power) => m_Roto.Rumble(time, power);
 
         /// <summary>
         /// Switch RotoVr mode 
@@ -193,18 +204,18 @@ namespace RotoVR.SDK.Components
             switch (mode)
             {
                 case ModeType.FreeMode:
-                    m_Roto.SetMode(mode, new ModeParametersModel(0, 30));
+                    m_Roto.SetMode(mode, new ModeParametersModel(0, 100));
                     break;
                 case ModeType.HeadTrack:
                     OnModeChanged += OnModeChangedHandler;
 
-                    m_Roto.SetMode(mode, new ModeParametersModel(0, 30));
+                    m_Roto.SetMode(mode, new ModeParametersModel(0, 100));
                     var headCamera = Camera.main;
                     if (headCamera != null)
                         m_Roto.StartHeadTracking(this, headCamera.gameObject.transform);
                     break;
                 case ModeType.CockpitMode:
-                    m_Roto.SetMode(mode, new ModeParametersModel(140, 30));
+                    m_Roto.SetMode(mode, new ModeParametersModel(140, 100));
                     break;
                 case ModeType.SimulationMode:
                     m_Roto.SetMode(ModeType.FreeMode, new ModeParametersModel(0, 100));
