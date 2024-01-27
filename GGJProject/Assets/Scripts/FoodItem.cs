@@ -10,4 +10,6 @@ public class FoodItem : ScriptableObject
     public FoodItem Cooked;
 
     public float CookTime;
+    public bool isCookFood;
+    
 }
